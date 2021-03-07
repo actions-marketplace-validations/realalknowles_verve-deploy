@@ -1,0 +1,15 @@
+name: 'Verve Deploy'
+description: 'Deploys a lambda application'
+inputs:
+  role:
+    description: 'Role to assume to identify the AWS account'
+    required: true
+  regions:
+    description: 'Comma separated list of AWS regions to perform the deployment in'
+    required: true
+  function-name:
+    description: 'Name of the lambda function to deploy the code to'
+    required: false
+runs:
+  using: 'node12'
+  main: 'index.js'

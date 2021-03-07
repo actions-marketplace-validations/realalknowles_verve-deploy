@@ -1,0 +1,20 @@
+{
+  "name": "verve-deploy",
+  "version": "1.0.0",
+  "description": "GitHub action supporting lambda deployments within the verve application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/realalknowles/verve-deploy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/realalknowles/verve-deploy/issues"
+  },
+  "homepage": "https://github.com/realalknowles/verve-deploy#readme"
+}
