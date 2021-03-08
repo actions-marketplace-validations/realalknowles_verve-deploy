@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/realalknowles/verve-deploy/issues"
   },
-  "homepage": "https://github.com/realalknowles/verve-deploy#readme"
+  "homepage": "https://github.com/realalknowles/verve-deploy#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "aws-sdk": "^2.858.0",
+    "node-core-lib": "^0.11.11"
+  }
 }

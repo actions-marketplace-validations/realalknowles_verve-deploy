@@ -1,10 +1,16 @@
 name: 'Verve Deploy'
 description: 'Deploys a lambda application'
 inputs:
-  role:
+  aws-access-key-id:
+    description: 'AWS access key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS secret access key'
+    required: true
+  assume-role-arn:
     description: 'Role to assume to identify the AWS account'
     required: true
-  regions:
+  aws-regions:
     description: 'Comma separated list of AWS regions to perform the deployment in'
     required: true
   function-name:
