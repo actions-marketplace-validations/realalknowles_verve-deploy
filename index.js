@@ -10,15 +10,18 @@ const regions = core.getInput('aws-regions').split(',')
 regions.forEach(region => deploy(region).then(() => console.log(`Deployed ${functionName} to ${region}`)))
 
 async function deploy(region) {
-    const sts = new AWS.STS({
+    const sts = getStsClient(region);
+    const session = await createSession(sts, region);
+}
+
+function getStsClient(region) {
+    return new AWS.STS({
         credentials: {
             accessKeyId: accessKeyId,
             secretAccessKey: secretAccessKey
         },
         region: region
     })
-
-    const session = await createSession(sts, region);
 }
 
 async function createSession(sts, region) {
