@@ -7,8 +7,10 @@ const secretAccessKey = core.getInput('aws-secret-access-key')
 const assumeRoleArn = core.getInput('assume-role-arn')
 const functionName = core.getInput('function-name')
 
-const regions = core.getInput('aws-regions').split(',')
-regions.forEach(region => deploy(region).then(() => console.log(`Deployed ${functionName} to ${region}`)))
+function run() {
+    const regions = core.getInput('aws-regions').split(',')
+    regions.forEach(region => deploy(region).then(() => console.log(`Deployed ${functionName} to ${region}`)))
+}
 
 async function deploy(region) {
     const setup =
@@ -75,3 +77,5 @@ async function updateFunctionConfiguration(lambda) {
         Handler: 'function.handler'
     }).promise()
 }
+
+run()
