@@ -3,10 +3,12 @@ import sinon from "sinon";
 import core from '@actions/core'
 import AWS from 'aws-sdk'
 import _ from 'underscore'
+import assert from 'assert'
 
 describe('Deployer', () => {
     afterEach(() => sinon.restore())
     it('should deploy the lambda', function () {
+        let log = sinon.spy(console, 'info')
         sinon.stub(core, 'getInput').callsFake(input => {
             return input
         })
@@ -19,7 +21,12 @@ describe('Deployer', () => {
             return stubLambda(properties)
         })
 
-        run()
+        return run().then(ignore => {
+            assert.strictEqual(log.getCall(0).args[0], 'Updating function: regions, function-name, function-source')
+            assert.strictEqual(log.getCall(1).args[0], 'Updated function code: {"outcome":"success"}')
+            assert.strictEqual(log.getCall(2).args[0], 'Updated function configuration: {"outcome":"success"}')
+            assert.strictEqual(log.getCall(3).args[0], 'Deployed function-name to regions')
+        })
     })
 })
 

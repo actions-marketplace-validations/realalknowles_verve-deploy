@@ -5,7 +5,7 @@
   "main": "action.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --debug-brk action.test.js --reporter spec"
+    "test": "mocha --debug-brk --file ./action.test.js --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,6 @@
     "node-core-lib": "^0.11.11"
   },
   "devDependencies": {
-    "chai": "^4.3.4",
     "mocha": "^8.3.2",
     "sinon": "^9.2.4",
     "underscore": "^1.12.1"

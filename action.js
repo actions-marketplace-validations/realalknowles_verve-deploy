@@ -2,7 +2,7 @@ import AWS from 'aws-sdk'
 import core from '@actions/core'
 import AdmZip from 'adm-zip'
 
-export default function run() {
+export default async function run() {
     const regions = core.getInput('regions').split(',')
     const accessKeyId = core.getInput('access-key-id')
     const secretAccessKey = core.getInput('secret-access-key')
@@ -10,10 +10,11 @@ export default function run() {
     const functionName = core.getInput('function-name')
     const functionSource = core.getInput('function-source')
 
-    regions.forEach(region =>
-        deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource)
-            .catch(error => handleDeploymentError(functionName, region, error))
-            .then(ignore => handleDeploymentSuccess(functionName, region)))
+    return Promise.all(
+        regions.map(region =>
+            deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource)
+                .catch(error => handleDeploymentError(functionName, region, error))
+                .then(ignore => handleDeploymentSuccess(functionName, region))))
 }
 
 async function deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource) {
@@ -93,5 +94,5 @@ function handleDeploymentError(functionName, region, error) {
 }
 
 function handleDeploymentSuccess(functionName, region) {
-    console.log(`Deployed ${functionName} to ${region}`)
+    console.info(`Deployed ${functionName} to ${region}`)
 }
