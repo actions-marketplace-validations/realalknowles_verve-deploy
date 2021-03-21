@@ -1,0 +1,97 @@
+import AWS from 'aws-sdk'
+import core from '@actions/core'
+import AdmZip from 'adm-zip'
+
+export default function run() {
+    const regions = core.getInput('regions').split(',')
+    const accessKeyId = core.getInput('access-key-id')
+    const secretAccessKey = core.getInput('secret-access-key')
+    const assumeRoleArn = core.getInput('assume-role-arn')
+    const functionName = core.getInput('function-name')
+    const functionSource = core.getInput('function-source')
+
+    regions.forEach(region =>
+        deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource)
+            .catch(error => handleDeploymentError(functionName, region, error))
+            .then(ignore => handleDeploymentSuccess(functionName, region)))
+}
+
+async function deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource) {
+    console.info(`Updating function: ${region}, ${functionName}, ${functionSource}`)
+    const setup =
+        await Promise.all([
+            zipSource(functionSource),
+            createSession(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName)
+        ])
+
+    const source = setup[0]
+    const session = setup[1]
+    const lambda = createLambdaClient(session)
+
+    const outcome =
+        await Promise.all([
+            updateFunctionCode(lambda, functionName, source),
+            updateFunctionConfiguration(lambda)
+        ])
+
+    console.info(`Updated function code: ${JSON.stringify(outcome[0])}`)
+    console.info(`Updated function configuration: ${JSON.stringify(outcome[1])}`)
+}
+
+async function zipSource(functionSource) {
+    const zip = new AdmZip(undefined, {})
+    zip.addLocalFolder(functionSource)
+    return zip.toBufferPromise()
+}
+
+async function createSession(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName) {
+    const sts = new AWS.STS({
+        region: region,
+        credentials: {
+            accessKeyId: accessKeyId,
+            secretAccessKey: secretAccessKey
+        }
+    })
+
+    return sts.assumeRole({
+        RoleArn: assumeRoleArn,
+        RoleSessionName: `deploy-${functionName}-${region}`,
+        DurationSeconds: 600
+    }).promise()
+}
+
+function createLambdaClient(session) {
+    return new AWS.Lambda({
+        maxRetries: 3,
+        sslEnabled: true,
+        logger: console,
+        credentials: {
+            accessKeyId: session.Credentials.AccessKeyId,
+            secretAccessKey: session.Credentials.SecretAccessKey,
+            sessionToken: session.Credentials.SessionToken
+        }
+    });
+}
+
+async function updateFunctionCode(lambda, functionName, source) {
+    return lambda.updateFunctionCode({
+        FunctionName: functionName,
+        Publish: false,
+        ZipFile: source,
+    }).promise()
+}
+
+async function updateFunctionConfiguration(lambda) {
+    return lambda.updateFunctionConfiguration({
+        Handler: 'function.handler'
+    }).promise()
+}
+
+function handleDeploymentError(functionName, region, error) {
+    console.error(`Failed to deploy ${functionName} to ${region}`, error)
+    process.exit(1)
+}
+
+function handleDeploymentSuccess(functionName, region) {
+    console.log(`Deployed ${functionName} to ${region}`)
+}

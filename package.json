@@ -2,10 +2,10 @@
   "name": "verve-deploy",
   "version": "1.0.0",
   "description": "GitHub action supporting lambda deployments within the verve application.",
-  "main": "index.js",
+  "main": "action.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --debug-brk action.test.js --reporter spec"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,11 @@
     "adm-zip": "^0.5.4",
     "aws-sdk": "^2.858.0",
     "node-core-lib": "^0.11.11"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
+    "sinon": "^9.2.4",
+    "underscore": "^1.12.1"
   }
 }

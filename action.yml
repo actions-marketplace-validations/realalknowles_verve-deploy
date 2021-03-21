@@ -1,21 +1,24 @@
 name: 'Verve Deploy'
 description: 'Deploys a lambda application'
 inputs:
-  aws-access-key-id:
+  regions:
+    description: 'Comma separated list of AWS regions to perform the deployment in'
+    required: true
+  access-key-id:
     description: 'AWS access key ID'
     required: true
-  aws-secret-access-key:
+  secret-access-key:
     description: 'AWS secret access key'
     required: true
   assume-role-arn:
     description: 'Role to assume to identify the AWS account'
     required: true
-  aws-regions:
-    description: 'Comma separated list of AWS regions to perform the deployment in'
-    required: true
   function-name:
     description: 'Name of the lambda function to deploy the code to'
-    required: false
+    required: true
+  function-source:
+    description: 'Name of the directory containing the lambda source (relative to the source root)'
+    required: true
 runs:
   using: 'node12'
   main: 'index.js'
