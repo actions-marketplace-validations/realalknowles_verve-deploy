@@ -15,7 +15,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: '12.x'
+          node-version: 12.x
       - name: Test Action
         run: |
           npm ci
@@ -25,3 +25,11 @@ jobs:
         run: |
           npm i -g @vercel/ncc
           ncc build action.js --license licenses.txt
+      - name: Create Version
+        id: version
+        run: echo "::set-output name=number::$(date +%s)"
+      - name: Tag Release
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.version.outputs.number }}
