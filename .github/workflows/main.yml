@@ -27,7 +27,7 @@ jobs:
           ncc build action.js --license licenses.txt
       - name: Create Version
         id: version
-        run: echo "::set-output name=number::$(date +%s)"
+        run: echo "::set-output name=number::v$(date +%s)"
       - name: Tag Release
         uses: tvdias/github-tagger@v0.0.1
         with:
