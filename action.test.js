@@ -94,7 +94,7 @@ function stubUpdateFunction() {
         },
         updateFunctionConfiguration: properties => {
             if (_.isEqual(properties, {
-                Handler: 'function.handler'
+                Handler: 'function-handler'
             })) {
                 return stubResolveUpdateFunction();
             }

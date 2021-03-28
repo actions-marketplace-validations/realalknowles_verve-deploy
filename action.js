@@ -8,16 +8,18 @@ export default async function run() {
     const secretAccessKey = core.getInput('secret-access-key')
     const assumeRoleArn = core.getInput('assume-role-arn')
     const functionName = core.getInput('function-name')
+    const functionHandler = core.getInput('function-handler')
     const functionSource = core.getInput('function-source')
 
     return Promise.all(
         regions.map(region =>
-            deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource)
+            deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionHandler, functionSource)
                 .catch(error => handleDeploymentError(functionName, region, error))
                 .then(ignore => handleDeploymentSuccess(functionName, region))))
 }
 
-async function deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionSource) {
+async function deploy(
+    region, accessKeyId, secretAccessKey, assumeRoleArn, functionName, functionHandler, functionSource) {
     console.info(`Updating function: ${region}, ${functionName}, ${functionSource}`)
     const setup =
         await Promise.all([
@@ -32,7 +34,7 @@ async function deploy(region, accessKeyId, secretAccessKey, assumeRoleArn, funct
     const outcome =
         await Promise.all([
             updateFunctionCode(lambda, functionName, source),
-            updateFunctionConfiguration(lambda)
+            updateFunctionConfiguration(lambda, functionHandler)
         ])
 
     console.info(`Updated function code: ${JSON.stringify(outcome[0])}`)
@@ -82,9 +84,9 @@ async function updateFunctionCode(lambda, functionName, source) {
     }).promise()
 }
 
-async function updateFunctionConfiguration(lambda) {
+async function updateFunctionConfiguration(lambda, functionHandler) {
     return lambda.updateFunctionConfiguration({
-        Handler: 'function.handler'
+        Handler: functionHandler
     }).promise()
 }
 

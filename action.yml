@@ -16,6 +16,9 @@ inputs:
   function-name:
     description: 'Name of the lambda function to deploy the code to'
     required: true
+  function-handler:
+    description: 'Handler method of the lambda function'
+    required: true
   function-source:
     description: 'Name of the directory containing the lambda source (relative to the source root)'
     required: true
