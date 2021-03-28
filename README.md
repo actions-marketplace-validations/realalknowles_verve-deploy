@@ -1,6 +1,6 @@
 # Verve Deploy #
 
-GitHub action supporting lambda deployments within the verve application. Performs the following functions:
+GitHub action supporting lambda deployments against pre-existing infrastructure. Performs the following functions:
 
 * Zip source code and dependencies at a specified location.
 * Deploy the zipped source to given pre-existing lambda functions in given regions.
