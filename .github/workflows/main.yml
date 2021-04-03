@@ -25,6 +25,9 @@ jobs:
         run: |
           npm i -g @vercel/ncc
           ncc build index.js --license licenses.txt
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Commit source distribution
       - name: Create Version
         id: version
         run: echo "::set-output name=number::v$(date +%s)"
