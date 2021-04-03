@@ -1,9 +1,9 @@
-import run from './action.js'
-import sinon from "sinon";
-import core from '@actions/core'
-import AWS from 'aws-sdk'
-import _ from 'underscore'
-import assert from 'assert'
+const action = require('./action.js')
+const sinon = require('sinon')
+const core = require('@actions/core')
+const aws = require('aws-sdk')
+const _ = require('underscore')
+const assert = require('assert')
 
 describe('Deployer', () => {
     afterEach(() => sinon.restore())
@@ -13,15 +13,15 @@ describe('Deployer', () => {
             return input
         })
 
-        sinon.stub(AWS, 'STS').callsFake(properties => {
+        sinon.stub(aws, 'STS').callsFake(properties => {
             return stubSts(properties);
         })
 
-        sinon.stub(AWS, 'Lambda').callsFake(properties => {
+        sinon.stub(aws, 'Lambda').callsFake(properties => {
             return stubLambda(properties)
         })
 
-        return run().then(ignore => {
+        return action.run().then(ignore => {
             assert.strictEqual(log.getCall(0).args[0], 'Updating function: regions, function-name, function-source')
             assert.strictEqual(log.getCall(1).args[0], 'Updated function code: {"outcome":"success"}')
             assert.strictEqual(log.getCall(2).args[0], 'Updated function configuration: {"outcome":"success"}')

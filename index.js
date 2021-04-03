@@ -1,2 +1,3 @@
-import run from './action.js'
-run()
+const action = require('./action.js')
+
+action.run()

@@ -1,8 +1,8 @@
-import AWS from 'aws-sdk'
-import core from '@actions/core'
-import AdmZip from 'adm-zip'
+const aws = require('aws-sdk')
+const core = require('@actions/core')
+const adm = require('adm-zip')
 
-export default async function run() {
+async function run() {
     const regions = core.getInput('regions').split(',')
     const accessKeyId = core.getInput('access-key-id')
     const secretAccessKey = core.getInput('secret-access-key')
@@ -42,13 +42,13 @@ async function deploy(
 }
 
 async function zipSource(functionSource) {
-    const zip = new AdmZip(undefined, {})
+    const zip = new adm(undefined, {})
     zip.addLocalFolder(functionSource)
     return zip.toBufferPromise()
 }
 
 async function createSession(region, accessKeyId, secretAccessKey, assumeRoleArn, functionName) {
-    const sts = new AWS.STS({
+    const sts = new aws.STS({
         region: region,
         credentials: {
             accessKeyId: accessKeyId,
@@ -64,7 +64,7 @@ async function createSession(region, accessKeyId, secretAccessKey, assumeRoleArn
 }
 
 function createLambdaClient(session) {
-    return new AWS.Lambda({
+    return new aws.Lambda({
         maxRetries: 3,
         sslEnabled: true,
         logger: console,
@@ -98,3 +98,5 @@ function handleDeploymentError(functionName, region, error) {
 function handleDeploymentSuccess(functionName, region) {
     console.info(`Deployed ${functionName} to ${region}`)
 }
+
+module.exports = {run}
