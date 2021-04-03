@@ -29,7 +29,7 @@ async function deploy(
 
     const source = setup[0]
     const session = setup[1]
-    const lambda = createLambdaClient(session)
+    const lambda = createLambdaClient(session, region)
 
     const outcome =
         await Promise.all([
@@ -63,7 +63,7 @@ async function createSession(region, accessKeyId, secretAccessKey, assumeRoleArn
     }).promise()
 }
 
-function createLambdaClient(session) {
+function createLambdaClient(session, region) {
     return new aws.Lambda({
         maxRetries: 3,
         sslEnabled: true,
@@ -72,7 +72,8 @@ function createLambdaClient(session) {
             accessKeyId: session.Credentials.AccessKeyId,
             secretAccessKey: session.Credentials.SecretAccessKey,
             sessionToken: session.Credentials.SessionToken
-        }
+        },
+        region: region
     });
 }
 

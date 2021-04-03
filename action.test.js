@@ -79,7 +79,8 @@ function stubLambda(properties) {
             accessKeyId: 'assumed-access-key-id',
             secretAccessKey: 'assumed-secret-access-key',
             sessionToken: 'session-token'
-        }
+        },
+        region: 'regions'
     })) {
         return stubUpdateFunction();
     }
