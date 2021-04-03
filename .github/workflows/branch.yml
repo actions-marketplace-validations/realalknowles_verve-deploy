@@ -13,7 +13,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 14
       - name: Test Action
         run: |
           npm ci
@@ -22,5 +22,5 @@ jobs:
       - name: Build Action
         run: |
           npm i -g @vercel/ncc
-          ncc build index.cjs --license licenses.txt
+          ncc build index.js --license licenses.txt
 
