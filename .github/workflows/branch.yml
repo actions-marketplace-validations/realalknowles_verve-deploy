@@ -22,5 +22,5 @@ jobs:
       - name: Build Action
         run: |
           npm i -g @vercel/ncc
-          ncc build action.js --license licenses.txt
+          ncc build index.cjs --license licenses.txt
 
