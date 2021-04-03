@@ -48,7 +48,7 @@ function stubAssumeRole() {
             if (_.isEqual(properties, {
                 RoleArn: 'assume-role-arn',
                 RoleSessionName: 'deploy-function-name-regions',
-                DurationSeconds: 600
+                DurationSeconds: 1200
             })) {
                 return stubResolveAssumeRole();
             }

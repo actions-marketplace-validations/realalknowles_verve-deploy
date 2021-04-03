@@ -59,7 +59,7 @@ async function createSession(region, accessKeyId, secretAccessKey, assumeRoleArn
     return sts.assumeRole({
         RoleArn: assumeRoleArn,
         RoleSessionName: `deploy-${functionName}-${region}`,
-        DurationSeconds: 600
+        DurationSeconds: 1200
     }).promise()
 }
 
