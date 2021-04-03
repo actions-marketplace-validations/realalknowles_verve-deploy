@@ -27,14 +27,11 @@ jobs:
         run: |
           npm i -g @vercel/ncc
           ncc build index.js --license licenses.txt
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Commit source distribution
       - name: Create Version
         id: version
         run: echo "::set-output name=number::v$(date +%s)"
-      - name: Tag Release
-        uses: tvdias/github-tagger@v0.0.1
+      - name: Release Action
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.version.outputs.number }}
+          commit_message: Commit source distribution
+          tagging_message: ${{ steps.version.outputs.number }}
