@@ -2,7 +2,7 @@
   "name": "verve-deploy",
   "version": "1.0.0",
   "description": "GitHub action supporting lambda deployments within the verve application.",
-  "main": "action.js",
+  "main": "index.cjs",
   "type": "module",
   "scripts": {
     "test": "mocha --debug-brk --file ./action.test.js --reporter spec"
