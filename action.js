@@ -34,7 +34,7 @@ async function deploy(
     const outcome =
         await Promise.all([
             updateFunctionCode(lambda, functionName, source),
-            updateFunctionConfiguration(lambda, functionHandler)
+            updateFunctionConfiguration(lambda, functionName, functionHandler)
         ])
 
     console.info(`Updated function code: ${JSON.stringify(outcome[0])}`)
@@ -85,8 +85,9 @@ async function updateFunctionCode(lambda, functionName, source) {
     }).promise()
 }
 
-async function updateFunctionConfiguration(lambda, functionHandler) {
+async function updateFunctionConfiguration(lambda, functionName, functionHandler) {
     return lambda.updateFunctionConfiguration({
+        FunctionName: functionName,
         Handler: functionHandler
     }).promise()
 }
